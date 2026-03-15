@@ -32,7 +32,7 @@
                 <span class="text-primary">❄️ {{ "⭐" * monster.ice_weak if monster.ice_weak else "❌" }}</span>
               </div>
               
-              <a href="#" class="btn btn-outline-info btn-sm mt-3">View Details</a>
+              <a href="{{ url_for('monster_db.view', monster_id=monster.id) }}" class="btn btn-outline-info btn-sm mt-3">View</a>
             </div>
           </div>
         </div>

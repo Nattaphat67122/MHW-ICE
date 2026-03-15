@@ -11,10 +11,24 @@ class User(UserMixin, db.Model):
     lastname = db.Column(db.String(100))
     avatar = db.Column(db.String(200), default='default.png')
 
+class ElementType(db.Model):
+    __tablename__ = 'element_type'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+monster_elements = db.Table('monster_elements',
+    db.Column('monster_id', db.Integer, db.ForeignKey('monsterelement.id'), primary_key=True),
+    db.Column('element_id', db.Integer, db.ForeignKey('element_type.id'), primary_key=True)
+)
+
 class Monsterelement(db.Model):
+    __tablename__ = 'monsterelement'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    main_element = db.Column(db.String(50))
+    
+    elements = db.relationship('ElementType', secondary=monster_elements, backref='monsters')
+    
+    main_elements = db.Column(db.JSON, default=[]) 
     img_url = db.Column(db.String(500))
     description = db.Column(db.Text) 
     fire_weak = db.Column(db.Integer, default=0)

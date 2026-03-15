@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
-from monster.models import Monsterelement, User
+from monster.models import ElementType, Monsterelement, User
 from monster.extensions import db
 from monster.models import db
 
@@ -18,11 +18,9 @@ def index():
 
 @monster_db.route('/new', methods=['GET', 'POST'])
 def new_monster():
-
-    monster_types_list = ['Flying Wyvern', 'Fanged Wyvern', 'Elder Dragon'] 
-
     if request.method == 'POST':
         name = request.form.get('name')
+        selected_elements = request.form.getlist('main_elements') 
 
         query = db.select(Monsterelement).where(Monsterelement.name == name)
         monster = db.session.scalar(query)
@@ -33,20 +31,26 @@ def new_monster():
         
         new_mon = Monsterelement(
             name = name,
-            main_element = request.form.get('main_element'),
+            img_url = request.form.get('img_url'), 
+            description = request.form.get('description'), 
             fire_weak = request.form.get('fire_weak', 0),
             water_weak = request.form.get('water_weak', 0),
             thunder_weak = request.form.get('thunder_weak', 0),
             ice_weak = request.form.get('ice_weak', 0),
             dragon_weak = request.form.get('dragon_weak', 0)
-        )    
+        )
+
+        for ename in selected_elements:
+            el = db.session.scalar(db.select(ElementType).where(ElementType.name == ename))
+            if el:
+                new_mon.elements.append(el)
+
         db.session.add(new_mon)
         db.session.commit()
         flash('เพิ่มข้อมูลมอนสเตอร์สำเร็จ!', 'success')
         return redirect(url_for('monster_db.index'))
 
-    return render_template('monster/new_monster.html',
-                           title='New monster Page')
+    return render_template('monster/new_monster.html', title='New monster Page')
 
 @monster_db.route('/view/<int:monster_id>')
 def monster_detail(monster_id):
@@ -85,17 +89,20 @@ def edit_monster(monster_id):
 
     if request.method == 'POST':
         monster.name = request.form.get('name')
-        monster.main_element = request.form.get('main_element')
         monster.img_url = request.form.get('img_url')
         monster.description = request.form.get('description')
-        monster.fire_weak = request.form.get('fire_weak', 0)
-        monster.water_weak = request.form.get('water_weak', 0)
-        monster.thunder_weak = request.form.get('thunder_weak', 0)
-        monster.ice_weak = request.form.get('ice_weak', 0)
-        monster.dragon_weak = request.form.get('dragon_weak', 0)
+        
+        monster.elements = [] 
+        selected_elements = request.form.getlist('main_elements')
+        for ename in selected_elements:
+            el = db.session.scalar(db.select(ElementType).where(ElementType.name == ename))
+            if el:
+                monster.elements.append(el)
 
         db.session.commit()
-        flash(f'แก้ไขข้อมูล {monster.name} สำเร็จ!', 'success')
         return redirect(url_for('monster_db.index'))
-
-    return render_template('monster/edit_monster.html', monster=monster, title='Edit Monster')
+    
+@monster_db.route('/view/<int:monster_id>')
+def view(monster_id):
+    monster = Monsterelement.query.get_or_404(monster_id)
+    return render_template('monster/monster_detail.html', monster=monster)

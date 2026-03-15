@@ -46,21 +46,21 @@
                 {% if monster.dragon_weak >= 3 %}<span class="text-secondary" title="Dragon Weakness">🐉</span>{% endif %}
               </td>
               <td>
-                <<div class="d-flex justify-content-center gap-2">
-                  <a href="{{ url_for('monster_db.monster_detail', monster_id=monster.id) }}" 
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="{{ url_for('monster_db.view', monster_id=monster.id) }}" 
                     class="btn btn-sm btn-info text-white">
                       <i class="bi bi-eye"></i> View
                   </a>
 
                   <a href="{{ url_for('monster_db.edit_monster', monster_id=monster.id) }}" 
                     class="btn btn-sm btn-warning text-dark">
-                    <i class="bi bi-pencil-square"></i> Edit
+                      <i class="bi bi-pencil-square"></i> Edit
                   </a>
 
-                  <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ monster.id }}">
-                    <i class="bi bi-trash"></i> Delete
-                  </button>
-                </div>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ monster.id }}">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+  </div>
 
                 <div class="modal fade" id="deleteModal{{ monster.id }}" tabindex="-1">
                   <div class="modal-dialog modal-dialog-centered text-dark">
