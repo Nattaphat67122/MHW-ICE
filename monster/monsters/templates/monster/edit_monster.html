@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-pencil-square"></i> Edit Monster: {{ monster.name }}</h2>
+    <hr>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Monster Name</label>
+            <input type="text" name="name" class="form-control" value="{{ monster.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Image URL</label>
+            <input type="text" name="img_url" class="form-control" value="{{ monster.img_url }}">
+            <small class="text-muted">ใส่ URL รูปภาพใหม่เพื่อให้แสดงผลถูกต้อง</small>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Main Element</label>
+            <select name="main_element" class="form-select">
+                <option value="Fire" {% if monster.main_element == 'Fire' %}selected{% endif %}>Fire</option>
+                <option value="Water" {% if monster.main_element == 'Water' %}selected{% endif %}>Water</option>
+                <option value="Thunder" {% if monster.main_element == 'Thunder' %}selected{% endif %}>Thunder</option>
+                <option value="Ice" {% if monster.main_element == 'Ice' %}selected{% endif %}>Ice</option>
+                <option value="Dragon" {% if monster.main_element == 'Dragon' %}selected{% endif %}>Dragon</option>
+            </select>
+        </div>
+        <div class="row">
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Fire</label>
+        <input type="number" name="fire_weak" class="form-control" value="{{ monster.fire_weak }}" min="0" max="3">
+    </div>
+    
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Water</label>
+        <input type="number" name="water_weak" class="form-control" value="{{ monster.water_weak }}" min="0" max="3">
+    </div>
+    
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Thunder</label>
+        <input type="number" name="thunder_weak" class="form-control" value="{{ monster.thunder_weak }}" min="0" max="3">
+    </div>
+    
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Ice</label>
+        <input type="number" name="ice_weak" class="form-control" value="{{ monster.ice_weak }}" min="0" max="3">
+    </div>
+    
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Dragon</label>
+        <input type="number" name="dragon_weak" class="form-control" value="{{ monster.dragon_weak }}" min="0" max="3">
+    </div>
+</div>
+            
+            </div>
+        <button type="submit" class="btn btn-success">Update Monster</button>
+        <a href="{{ url_for('monster_db.index') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

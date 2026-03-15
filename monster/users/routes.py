@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, url_for, redirect, flash
 from monster.extensions import db, bcrypt
 from monster.models import User
 from flask_login import login_user, logout_user, current_user, login_required
+from monster.extensions import login_manager
 
 users_bp = Blueprint('users', __name__, template_folder='templates')
-
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
   if request.method == 'POST':
@@ -117,3 +117,8 @@ def change_password():
 
     return render_template('users/change_password.html', 
                            title='Change Password')
+
+@login_manager.user_loader
+def load_user(user_id):
+    # ฟังก์ชันนี้จะคอยหยิบ User ออกมาตาม ID ที่อยู่ใน Session
+    return db.session.get(User, int(user_id))

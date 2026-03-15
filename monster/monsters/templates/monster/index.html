@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-3 mb-3">
+    <h1 class="text-primary"><i class="bi bi-list-ul"></i> {{ title }}</h1>
+    <hr>
+    
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <a href="{{ url_for('monster_db.new_monster') }}" class="btn btn-outline-primary shadow-sm">
+          <i class="bi bi-plus-circle-fill"></i>
+          Register New Monster
+        </a>
+      </div>
+      <div class="col-md-6 text-end">
+        <span class="badge bg-secondary">Total: {{ monsters|length if monsters is iterable else 0 }}</span>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle shadow-sm">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Monster Name</th>
+            <th>Main Element</th>
+            <th>Weakness Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for monster in monsters %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td class="fw-bold text-info">{{ monster.name }}</td>
+              <td><span class="badge bg-dark">{{ monster.main_element }}</span></td>
+              <td>
+                {% if monster.fire_weak >= 3 %}<span class="text-danger" title="Fire Weakness">🔥</span>{% endif %}
+                {% if monster.water_weak >= 3 %}<span class="text-primary" title="Water Weakness">💧</span>{% endif %}
+                {% if monster.thunder_weak >= 3 %}<span class="text-warning" title="Thunder Weakness">⚡</span>{% endif %}
+                {% if monster.ice_weak >= 3 %}<span class="text-info" title="Ice Weakness">❄️</span>{% endif %}
+                {% if monster.dragon_weak >= 3 %}<span class="text-secondary" title="Dragon Weakness">🐉</span>{% endif %}
+              </td>
+              <td>
+                <<div class="d-flex justify-content-center gap-2">
+                  <a href="{{ url_for('monster_db.monster_detail', monster_id=monster.id) }}" 
+                    class="btn btn-sm btn-info text-white">
+                      <i class="bi bi-eye"></i> View
+                  </a>
+
+                  <a href="{{ url_for('monster_db.edit_monster', monster_id=monster.id) }}" 
+                    class="btn btn-sm btn-warning text-dark">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </a>
+
+                  <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ monster.id }}">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+
+                <div class="modal fade" id="deleteModal{{ monster.id }}" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered text-dark">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body text-start">
+                        คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลของ **{{ monster.name }}**?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form action="{{ url_for('monster_db.delete_monster', monster_id=monster.id) }}" method="POST">
+                          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-muted p-4">No monster data found.</td>
+            </tr>
+          {% endfor %} </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

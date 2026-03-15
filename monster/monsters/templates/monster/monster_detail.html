@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  {{ monster.name }} - Monster Detail
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="{{ monster.img_url if monster.img_url else 'https://via.placeholder.com/300' }}" 
+                 alt="{{ monster.name }}" 
+                 class="img-fluid rounded shadow-lg border">
+        </div>
+        
+        <div class="col-md-8">
+            <h1 class="display-4 text-primary fw-bold">{{ monster.name }}</h1>
+            <p class="lead text-muted">Main Element: <span class="badge bg-dark">{{ monster.main_element }}</span></p>
+            <hr>
+            
+            <h3 class="text-danger mb-3"><i class="bi bi-shield-exclamation"></i> Elemental Weaknesses</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fire</th>
+                            <th>Water</th>
+                            <th>Thunder</th>
+                            <th>Ice</th>
+                            <th>Dragon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fs-4">
+                            <td>{% for i in range(monster.fire_weak|int) %}⭐{% endfor %}</td>
+                            <td>{% for i in range(monster.water_weak|int) %}⭐{% endfor %}</td>
+                            <td>{% for i in range(monster.thunder_weak|int) %}⭐{% endfor %}</td>
+                            <td>{% for i in range(monster.ice_weak|int) %}⭐{% endfor %}</td>
+                            <td>{% for i in range(monster.dragon_weak|int) %}⭐{% endfor %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ url_for('monster_db.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Database
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

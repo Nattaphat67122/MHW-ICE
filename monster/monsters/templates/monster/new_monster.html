@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-3 mb-5">
+    <h1 class="text-primary"><i class="bi bi-plus-circle"></i> {{ title }}</h1>
+    <hr>
+    <div class="card shadow-sm mt-3">
+      <div class="card-header bg-dark text-white">
+        <h3 class="mb-0">Monster Research Data</h3>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label fw-bold">Monster Name</label>
+              <input name="name" type="text" class="form-control" id="name" placeholder="e.g. Velkhana" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="main_element" class="form-label fw-bold">Main Element</label>
+              <select name="main_element" class="form-select" id="main_element">
+                <option value="None">None</option>
+                <option value="Fire">Fire</option>
+                <option value="Water">Water</option>
+                <option value="Thunder">Thunder</option>
+                <option value="Ice">Ice</option>
+                <option value="Dragon">Dragon</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="img_url" class="form-label fw-bold">Monster Image URL</label>
+            <input name="img_url" type="text" class="form-control" id="img_url" placeholder="https://..." required>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Description / Habitat</label>
+            <textarea name="description" class="form-control" id="description" rows="3"></textarea>
+          </div>
+
+          <hr>
+          <h5 class="text-danger mb-3"><i class="bi bi-exclamation-triangle"></i> Element Weakness (0 - 3 Stars)</h5>
+          <div class="row">
+            <div class="col mb-3">
+              <label class="form-label">🔥 Fire</label>
+              <input type="number" name="fire_weak" class="form-control" min="0" max="3" value="0">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">💧 Water</label>
+              <input type="number" name="water_weak" class="form-control" min="0" max="3" value="0">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">⚡ Thunder</label>
+              <input type="number" name="thunder_weak" class="form-control" min="0" max="3" value="0">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">❄️ Ice</label>
+              <input type="number" name="ice_weak" class="form-control" min="0" max="3" value="0">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">🐉 Dragon</label>
+              <input type="number" name="dragon_weak" class="form-control" min="0" max="3" value="0">
+            </div>
+          </div>
+
+          <hr>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-save"></i> Save to Database
+            </button>
+            <a href="{{ url_for('monster_db.index') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
