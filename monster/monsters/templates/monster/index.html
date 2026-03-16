@@ -37,7 +37,14 @@
             <tr>
               <td>{{ loop.index }}</td>
               <td class="fw-bold text-info">{{ monster.name }}</td>
-              <td><span class="badge bg-dark">{{ monster.main_element }}</span></td>
+              <td>
+                {% for el in monster.elements %}
+                  <span class="badge bg-dark">
+                    {% if el.name == 'Fire' %}🔥{% elif el.name == 'Water' %}💧{% elif el.name == 'Thunder' %}⚡{% elif el.name == 'Ice' %}❄️{% elif el.name == 'Dragon' %}🐉{% endif %}
+                      {{ el.name }}
+                  </span>
+                {% endfor %}
+              </td>
               <td>
                 {% if monster.fire_weak >= 3 %}<span class="text-danger" title="Fire Weakness">🔥</span>{% endif %}
                 {% if monster.water_weak >= 3 %}<span class="text-primary" title="Water Weakness">💧</span>{% endif %}
@@ -47,9 +54,11 @@
               </td>
               <td>
                 <div class="d-flex justify-content-center gap-2">
-                  <a href="{{ url_for('monster_db.view', monster_id=monster.id) }}" 
-                    class="btn btn-sm btn-info text-white">
-                      <i class="bi bi-eye"></i> View
+                  <a href="{{ url_for('monster_db.view', monster_id=monster.id) }}">
+                  <a href="{{ url_for('monster_db.monster_detail', monster_id=monster.id) }}" class="btn btn-outline-info">
+                  View Detail
+                </a>
+                <i class="bi bi-eye"></i> View
                   </a>
 
                   <a href="{{ url_for('monster_db.edit_monster', monster_id=monster.id) }}" 
@@ -91,4 +100,4 @@
       </table>
     </div>
   </div>
-{% endblock %}
+{% endblock %}<

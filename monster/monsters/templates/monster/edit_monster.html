@@ -14,14 +14,24 @@
             <small class="text-muted">ใส่ URL รูปภาพใหม่เพื่อให้แสดงผลถูกต้อง</small>
         </div>
         <div class="mb-3">
-            <label class="form-label">Main Element</label>
-            <select name="main_element" class="form-select">
-                <option value="Fire" {% if monster.main_element == 'Fire' %}selected{% endif %}>Fire</option>
-                <option value="Water" {% if monster.main_element == 'Water' %}selected{% endif %}>Water</option>
-                <option value="Thunder" {% if monster.main_element == 'Thunder' %}selected{% endif %}>Thunder</option>
-                <option value="Ice" {% if monster.main_element == 'Ice' %}selected{% endif %}>Ice</option>
-                <option value="Dragon" {% if monster.main_element == 'Dragon' %}selected{% endif %}>Dragon</option>
-            </select>
+            <label class="form-label fw-bold">Main Elements (เลือกได้มากกว่า 1 ธาตุ)</label>
+        <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
+            {% for el_name in ['Fire', 'Water', 'Thunder', 'Ice', 'Dragon'] %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="main_elements" 
+                   value="{{ el_name }}" id="el_{{ el_name }}"
+                   {# เช็คว่ามอนสเตอร์ตัวนี้มีธาตุนี้อยู่หรือไม่ #}
+                   {% for m_el in monster.elements %}
+                       {% if m_el.name == el_name %} checked {% endif %}
+                   {% endfor %}>
+            <label class="form-check-label" for="el_{{ el_name }}">
+                {% if el_name == 'Fire' %}🔥{% elif el_name == 'Water' %}💧{% elif el_name == 'Thunder' %}⚡{% elif el_name == 'Ice' %}❄️{% elif el_name == 'Dragon' %}🐉{% endif %}
+                {{ el_name }}
+            </label>
+            </div>
+            {% endfor %}
+        </div>
+            <small class="text-muted">ติ๊กถูกหน้าธาตุที่มอนสเตอร์ตัวนี้ใช้เป็นหลัก</small>
         </div>
         <div class="row">
     <div class="col-md-2 mb-3">

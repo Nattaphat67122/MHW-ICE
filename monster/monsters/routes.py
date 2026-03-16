@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
+import monster
 from monster.models import ElementType, Monsterelement, User
 from monster.extensions import db
 from monster.models import db
@@ -52,23 +53,21 @@ def new_monster():
 
     return render_template('monster/new_monster.html', title='New monster Page')
 
-@monster_db.route('/view/<int:monster_id>')
+@monster_db.route('/view/<int:monster_id>', endpoint='view')
+@monster_db.route('/detail/<int:monster_id>')
 def monster_detail(monster_id):
-
     res = db.session.get(Monsterelement, monster_id)
     
     if res is None:
         flash('ไม่พบข้อมูลมอนสเตอร์', 'warning')
         return redirect(url_for('monster_db.index'))
 
-    # แก้ Path ตรงนี้ให้เป็น monster/monster_detail.html
     return render_template('monster/monster_detail.html', 
                            monster=res, 
                            title=res.name)
 
 @monster_db.route('/delete/<int:monster_id>', methods=['POST'])
 def delete_monster(monster_id):
-    # ดึงข้อมูลมอนสเตอร์ที่ต้องการลบ
     monster = db.session.get(Monsterelement, monster_id)
     
     if monster:
@@ -91,8 +90,14 @@ def edit_monster(monster_id):
         monster.name = request.form.get('name')
         monster.img_url = request.form.get('img_url')
         monster.description = request.form.get('description')
-        
-        monster.elements = [] 
+
+        monster.fire_weak = request.form.get('fire_weak', 0)
+        monster.water_weak = request.form.get('water_weak', 0)
+        monster.thunder_weak = request.form.get('thunder_weak', 0)
+        monster.ice_weak = request.form.get('ice_weak', 0)
+        monster.dragon_weak = request.form.get('dragon_weak', 0)
+
+        monster.elements = []
         selected_elements = request.form.getlist('main_elements')
         for ename in selected_elements:
             el = db.session.scalar(db.select(ElementType).where(ElementType.name == ename))
@@ -100,9 +105,8 @@ def edit_monster(monster_id):
                 monster.elements.append(el)
 
         db.session.commit()
+        flash(f'แก้ไขข้อมูล {monster.name} สำเร็จ!', 'success')
         return redirect(url_for('monster_db.index'))
+
+    return render_template('monster/edit_monster.html', monster=monster, title='Edit Monster')
     
-@monster_db.route('/view/<int:monster_id>')
-def view(monster_id):
-    monster = Monsterelement.query.get_or_404(monster_id)
-    return render_template('monster/monster_detail.html', monster=monster)

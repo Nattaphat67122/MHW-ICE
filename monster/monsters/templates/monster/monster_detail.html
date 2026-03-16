@@ -1,51 +1,58 @@
 {% extends 'layout.html' %}
-
-{% block title %}
-  {{ monster.name }} - Monster Detail
-{% endblock %}
-
 {% block content %}
 <div class="container mt-4 mb-5">
     <div class="row">
-        <div class="col-md-4 text-center">
-            <img src="{{ monster.img_url if monster.img_url else 'https://via.placeholder.com/300' }}" 
-                 alt="{{ monster.name }}" 
-                 class="img-fluid rounded shadow-lg border">
-        </div>
-        
-        <div class="col-md-8">
-            <h1 class="display-4 text-primary fw-bold">{{ monster.name }}</h1>
-            <p class="lead text-muted">Main Element: <span class="badge bg-dark">{{ monster.main_element }}</span></p>
-            <hr>
-            
-            <h3 class="text-danger mb-3"><i class="bi bi-shield-exclamation"></i> Elemental Weaknesses</h3>
-            <div class="table-responsive">
-                <table class="table table-bordered text-center align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Fire</th>
-                            <th>Water</th>
-                            <th>Thunder</th>
-                            <th>Ice</th>
-                            <th>Dragon</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fs-4">
-                            <td>{% for i in range(monster.fire_weak|int) %}⭐{% endfor %}</td>
-                            <td>{% for i in range(monster.water_weak|int) %}⭐{% endfor %}</td>
-                            <td>{% for i in range(monster.thunder_weak|int) %}⭐{% endfor %}</td>
-                            <td>{% for i in range(monster.ice_weak|int) %}⭐{% endfor %}</td>
-                            <td>{% for i in range(monster.dragon_weak|int) %}⭐{% endfor %}</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 overflow-hidden">
+                <img src="{{ monster.img_url }}" class="img-fluid" alt="{{ monster.name }}" style="min-height: 400px; object-fit: cover;">
+                <div class="card-body bg-dark text-white text-center">
+                    <h2 class="mb-0">{{ monster.name }}</h2>
+                    <div class="mt-2">
+                        {% for el in monster.elements %}
+                            <span class="badge bg-primary">
+                                {% if el.name == 'Fire' %}🔥{% elif el.name == 'Water' %}💧{% elif el.name == 'Thunder' %}⚡{% elif el.name == 'Ice' %}❄️{% elif el.name == 'Dragon' %}🐉{% endif %}
+                                {{ el.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="mt-4">
-                <a href="{{ url_for('monster_db.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Database
-                </a>
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h3><i class="bi bi-info-circle"></i> Monster Details</h3>
+                    <p class="text-muted">{{ monster.description or "No description available." }}</p>
+                    <hr>
+                    <h4 class="text-danger mb-3"><i class="bi bi-exclamation-triangle"></i> Elemental Weaknesses</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>🔥 Fire</th>
+                                    <th>💧 Water</th>
+                                    <th>⚡ Thunder</th>
+                                    <th>❄️ Ice</th>
+                                    <th>🐉 Dragon</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="fs-4">
+                                    <td>{{ '⭐' * monster.fire_weak if monster.fire_weak > 0 else '❌' }}</td>
+                                    <td>{{ '⭐' * monster.water_weak if monster.water_weak > 0 else '❌' }}</td>
+                                    <td>{{ '⭐' * monster.thunder_weak if monster.thunder_weak > 0 else '❌' }}</td>
+                                    <td>{{ '⭐' * monster.ice_weak if monster.ice_weak > 0 else '❌' }}</td>
+                                    <td>{{ '⭐' * monster.dragon_weak if monster.dragon_weak > 0 else '❌' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ url_for('monster_db.edit_monster', monster_id=monster.id) }}" class="btn btn-warning">Edit Data</a>
+                        <a href="{{ url_for('monster_db.index') }}" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
